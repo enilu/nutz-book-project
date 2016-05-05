@@ -7,10 +7,26 @@
   	>
     <% if (null != c_user!) { %>
     <div class='header'>
-      <span class='col_fade'>个人信息</span>
+      <span class='col_fade'><a href="${ctxPath}/yvr/u/${c_user.loginname}">个人信息</a></span>
     </div>
     <div class='inner'>
       <% layout("user/card.btl", {"user":c_user}){}; %>
+      <div style="display: none;">
+      	<button onclick="pay_tip();" title="支付功能测试">随机打赏</button>
+      	<script type="text/javascript">
+      	function pay_tip() {
+      		$.ajax({
+      		    url : "${base}/pay/bc/create?to=${c_user.userId}",
+      		    dataType : "json",
+      		    method : "post",
+      		    success : function(re) {
+      		    	if (re && re.data)
+      		        	BC.click(re.data);
+      		    }
+      		});
+      	};
+      	</script>
+      </div>
     </div>
     <% } else { %>
     <div class='inner'>

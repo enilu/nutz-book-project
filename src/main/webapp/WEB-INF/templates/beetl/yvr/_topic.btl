@@ -50,6 +50,9 @@ layout("_layout.btl",{}){
         <span>
           <a id="copy_link_btn" href="#" class="zclip" title="复制标题和地址" data-intro="可以复制标题和地址">复制</a>
         </span>
+        <span>
+          <a id="copy_link_btn" href="#" class="zclip" title="跨设备免登陆.注意,不是给手机客户端用的" data-intro="手机扫描后可免登陆" onclick="cs_qrcode();return false; ">跨屏二维码</a>
+        </span>
         
         <!-- 有点丑,先禁用了 -->
           <% if ( 1 != 1) {%>
@@ -82,8 +85,31 @@ layout("_layout.btl",{}){
       		无
       	<%}%>
       </div>
-      <% if (null != obj.current_user!) { %>
+      <% if (shiro.hasPermit("topic:update")) { %>
       <div id="manage_topic">
+         <a href='#' onclick="topic_update('${obj.topic.id}', ${!obj.topic.top}, 'top');">
+            <% if (obj.topic.top) { %>
+              <i class="fa fa-lg fa-star-o" title='取消置顶'></i>
+            <% } else { %>
+              <i class="fa fa-lg fa-star" title='置顶'/></i>
+            <% } %>
+          </a>
+          
+          <a href='#' onclick="topic_update('${obj.topic.id}', ${!obj.topic.good}, 'good');">
+            <% if (obj.topic.good) { %>
+              <i class="fa fa-lg fa-heart-o" title="取消精华"></i>
+            <% } else { %>
+              <i class="fa fa-lg fa-heart" title="加精华"></i>
+            <% } %>
+          </a>
+
+          <a href='#' onclick="topic_update('${obj.topic.id}', ${!obj.topic.lock}, 'lock');">
+            <% if (obj.topic.lock) { %>
+              <i class="fa fa-lg fa-unlock" title='取消锁定'></i>
+            <% } else { %>
+              <i class="fa fa-lg fa-lock" title='锁定(不可再回复)'/></i>
+            <% } %>
+          </a>
       </div>
       <% } %>
     </div>
@@ -151,7 +177,11 @@ layout("_layout.btl",{}){
   $(document).ready(function () {
     // 获取所有回复者name
     var allNames = $('.reply_author').map(function (idx, ele) {
-      return $(ele).text().trim();
+      var _tmp = $(ele).text().trim();
+      if (_tmp.indexOf("(") > -1 && _tmp.indexOf(")") > _tmp.indexOf("(")){
+          return _tmp.substr(_tmp.indexOf("(")+1, _tmp.indexOf(")") - _tmp.indexOf("(") - 1);
+      }
+      return _tmp;
     }).toArray();
     allNames = _.uniq(allNames);
     // END 获取所有回复者name
@@ -202,6 +232,9 @@ layout("_layout.btl",{}){
       parent.find('.reply2_area').prepend(editorWrap);
       var textarea = editorWrap.find('textarea.editor');
       var user = $btn.closest('.author_content').find('.reply_author').text().trim();
+      if (user.indexOf("(") > -1 && user.indexOf(")") > user.indexOf("(")){
+          user = user.substr(user.indexOf("(")+1, user.indexOf(")") - user.indexOf("(") - 1);
+      }
       var editor = textarea.data('editor');
       editorWrap.show('fast', function () {
         var cm = editor.codemirror;
@@ -481,35 +514,6 @@ var QueryString = function () {
   } 
     return query_string;
 }();
-$(function(){
-	if (console)
-			console.log(QueryString);
-	if (QueryString.watch) {
-		if (console)
-			console.log("watch topic");
-		var twatch = io.connect('//'+window.location.hostname+ ':81/twatch', {
-        	'reconnection delay' : 2000,
-        	'force new connection' : true
-		});
-        twatch.on("login", function(data){
-        	twatch.emit("watch", "${obj.topic.id}");
-        });
-		twatch.on("reload", function(data){
-			if ($.support.pjax) {
-				$.pjax.reload('#content');
-			} else {
-        		location.reload();
-        	}
-        });
-	} else {
-		$("#watch_btn").show();
-		if (console)
-			console.log("not watch");
-	}
-});
-function watch_me() {
-	window.location.href = window.location.href + "?watch=1";
-}
 function send_to_phone() {
 	$.ajax({
 		url : "${base}/yvr/t/${obj.topic.id}/push",
@@ -550,4 +554,82 @@ $(function() {
 		}
 	});
 });
+
+	
+	
+	function topic_update(tid, val, tp) {
+		var param = {id:tid, "opt":tp};
+		param[tp] = val;
+		$.ajax({
+			method:"POST",
+			url : "${base}/yvr/admin/update",
+			data : param,
+			dataType : "json",
+			success : function(data) {
+				location.reload();
+			}
+		});
+	};
+<%if (null != obj.current_user!){%>
+var _replies_count = ${obj.topic.replies.~size};
+function _check_topic_update() {
+	$.ajax({
+		url : "${base}/yvr/t/${obj.topic.id}/check?replies="+_replies_count,
+		dataType: "json",
+		success : function(re) {
+			if (re && re.count) {
+				_replies_count = re.count;
+				if ( ! re.options.icon) {
+					re.options.icon = "${base}/rs/logo.png"
+				}
+				var n = new Notification(re.data, re.options);
+				n.onclick = function() {
+					location.reload();
+				};
+			}
+		}
+	});
+}
+var ws;
+$(function(){
+	if (!Notification) {
+		return;
+	}
+	if (console)
+	    console.info(Notification.permission);
+	if (Notification.permission == "denied") {
+		return;
+	}
+	if (Notification.permission !== "granted") {
+		Notification.requestPermission();
+	}
+	if (Notification.permission !== "granted") {
+		return;
+	}
+	try {
+		var WS_URL = window.location.host+"${base}/yvr/topic/socket"
+		if (location.protocol == 'http:') {
+			ws = new WebSocket("ws://"+WS_URL);
+		} else {
+			ws = new WebSocket("wss://"+WS_URL);
+		}
+		
+		ws.onmessage = function(event) {
+		    var re = JSON.parse(event.data);
+		    _replies_count = re.count;
+		    var n = new Notification(re.data, re.options);
+			n.onclick = function() {
+				location.reload();
+			};
+		};
+		window.setInterval(function(){
+			ws.send(JSON.stringify({id:'${obj.topic.id}',replies:_replies_count}));
+		}, 5000);
+	} catch (ex) {
+		if (console)
+		    console.info(ex);
+		window.setInterval(_check_topic_update, 5000);
+	}
+});
+<%}%>
 </script>
