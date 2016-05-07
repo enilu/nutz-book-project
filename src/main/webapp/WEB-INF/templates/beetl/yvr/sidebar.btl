@@ -7,7 +7,7 @@
   	>
     <% if (null != c_user!) { %>
     <div class='header'>
-      <span class='col_fade'><a href="${ctxPath}/yvr/u/${c_user.loginname}">个人信息</a></span>
+      <span class='col_fade'><a href="${ctxPath}/yvr/u/show/${c_user.loginname}">个人信息</a></span>
     </div>
     <div class='inner'>
       <% layout("user/card.btl", {"user":c_user}){}; %>
@@ -136,7 +136,7 @@
     </div>
   </div>
   <%if (conf['website.small_features'] != "false") {%>
-  <div class='panel' data-intro="小功能,有点意思" data-position="top">
+  <div class='panel' data-intro="小功能,有点意思" data-position="top" style="display:none">
     <div class='header'>
       <span class='col_fade'>小功能区</span>
     </div>

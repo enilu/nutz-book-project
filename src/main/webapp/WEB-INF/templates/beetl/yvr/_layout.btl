@@ -154,17 +154,21 @@ var ctxPath = "${ctxPath}";
     <div class="links">
       <a class='dark' href='${ctxPath}/yvr/rss'>RSS</a>
       |
-      <a class='dark' href='https://github.com/wendal/nutz-book-project'>源码地址</a>
+      <a class='dark' href='https://github.com/wendal/nutz-book-project'>系统源码自nutz-book-project</a>
       | Power By 
       <a class='dark' href='https://github.com/nutzam/nutz'>Nutz</a>
       ,
       <a class='dark' href='https://github.com/javamonkey/beetl2.0'>Beetl</a>
-      ,
-      <a class='dark' href='http://www.qiniu.com/'><img src="${cdnbase}${base}/rs/images/qiniu-transparent.png" style="width: 10%; height: 10%"/></a>
+
       | 
       <a class="dark" href='https://cnodejs.org'>页面模板源自cnodejs</a>
-      |
+       |
+      <a class="dark" href='http://enilu.cn'>nutz论坛</a>
+       |
+	  <a class="dark" href='http://enilu.cn'>enilu.cn</a>
+      <!--
       <a title="查看备案信息" target="_blank" href="http://www.miibeian.gov.cn">${conf['website.beian']}</a>
+      -->
     </div>
 
   </div>
@@ -175,18 +179,22 @@ var ctxPath = "${ctxPath}";
 	<form id='signup_apply_form' style="padding: 30px 30px 30px 30px">
 	<div class="input-group">
       		<span class="input-group-addon" id="basic-addon11">推荐人</span>
-      		<input name="tuijianren" type="text" class="form-control" placeholder="请一定要输入哦" aria-describedby="basic-addon11">
+      		<input name="referee" type="text" class="form-control" placeholder="请输入推荐人的id，不能为中文" aria-describedby="basic-addon11">
     	</div>
 	<div class="input-group">
-  		<span class="input-group-addon" id="basic-addon12">我想要的用户名</span>
-  		<input name="username" type="text" class="form-control" placeholder="仅小写英文字母和数字,4到10位" aria-describedby="basic-addon12">
+  		<span class="input-group-addon" id="basic-addon12">用户名</span>
+  		<input name="username" type="text" class="form-control" placeholder="仅小写英文字母和数字,4到10位，不能为中文" aria-describedby="basic-addon12">
 	</div>
+	<div class="input-group">
+      		<span class="input-group-addon" id="basic-addon1">密 码</span>
+      		<input name="password" type="password" class="form-control" placeholder="包含大小写字母,数字,特殊符号" aria-describedby="basic-addon1">
+    </div>
 
 	<div class="input-group">
   		<span class="input-group-addon" id="basic-addon13">邮箱</span>
   		<input name="email" type="email" class="form-control" placeholder="申请通过后通过此邮箱通知您" aria-describedby="basic-addon13">
 	</div>
-	<button type="button" onclick="do_signup_apply();" class="btn btn-primary">提交申请</button>
+	<button type="button" onclick="do_apply();" class="btn btn-primary">提交申请</button>
 
 	</form>
 </div>
@@ -259,16 +267,17 @@ setTimeout(function() {
 		layer.open({"title":"登陆", shadeClose : true, "type":1, content : $("#signin_div"), area : ['300px', '370px']});
 	}, 300);
 };
-function do_signup_apply(){
-console.log($("#signup_apply_form").serialize());
-$.ajax({
-		url : "${ctxPath}/yvr/u/signupapply/"+$("#signup_apply_form").serialize(),
-		method : "GET",
-		//data : $("#signup_apply_form").serialize(),
-		//dataType : "json",
-		success : function(re) {
+function do_apply(){
 
-			layer.alert(re);
+	$.ajax({
+		url : "${ctxPath}/yvr/u/apply",
+		method : "POST",
+		data : $("#signup_apply_form").serialize(),
+		dataType : "json",
+		success : function(re) {
+			if (console)
+				console.log(re);
+			layer.alert(re.msg || re.data);
 		}
 	});
 	return false;

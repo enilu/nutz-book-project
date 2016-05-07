@@ -68,8 +68,13 @@ public class YvrUserModule extends BaseModule {
 	public Object myHome() {
 	    return userHome(dao.fetch(User.class, Toolkit.uid()).getName());
 	}
-	
-	@At("/?")
+
+	@GET
+	 @At("/show/?")
+	@Ok("beetl:yvr/user/user_index.btl")
+	public Object user(String userName) {
+		return userHome(userName);
+	}
 	@Ok("beetl:yvr/user/user_index.btl")
 	public Object userHome(String userName) {
 		User user = dao.fetch(User.class, userName);
@@ -205,44 +210,57 @@ public class YvrUserModule extends BaseModule {
 
 	/**
 	 * 帐号申请
-	 * @param token
+//	 * @param token
 	 * @return
 	 */
-	@GET
-	@At("/signupapply/?")
-	@Ok("raw")
-	public Object signupApply(String token) {
+	@POST
+	@At("/apply")
+	@Ok("json")
+	public Object signupApply(@Param("referee") String referee,
+			@Param("email")String email,
+							  @Param("username")String username,
+							  @Param("password")String password) {
 
 		//tuijianren=admin&username=testapply&email=eniluzt@qq
-		String [] tokenArr = token.split("&");
-		String referee = tokenArr[0].split("=")[1];
-		String userName = tokenArr[1].split("=")[1];
-		String email = tokenArr[2].split("=")[1];
+//		String [] tokenArr = token.split("&");
+//		String referee = tokenArr[0].split("=")[1];
+//		String username = tokenArr[1].split("=")[1];
+//		String password = tokenArr[2].split("=")[1];
+//		String email = tokenArr[3].split("=")[1];
+
 
 		// 再次检查用户名
-		if (0 != dao.count(User.class, Cnd.where("name", "=", userName))) {
-			return "用户名已被占用";
+		if (0 != dao.count(User.class, Cnd.where("name", "=", username))) {
+			return ajaxFail("用户名已被占用");
 		}
 		if (0 != dao.count(UserProfile.class, Cnd.where("email", "=", email))) {
-			return "Email地址已被占用";
+			return ajaxFail("Email地址已被占用");
 		}
+		if (email.contains(",")||password.contains(",")) {
+			return ajaxFail("不允许使用英文逗号");
+		}
+		try {
+			new Email(email);
+		} catch (Exception e) {
+			return ajaxFail("Email地址不合法");
+		}
+
 		if(Strings.isBlank(referee)){
-			return "推荐人不能为空";
+			return ajaxFail( "推荐人不能为空");
 		}
 		Trans.exec(new Atom() {
 			public void run() {
-				User user = userService.apply(userName,userName+"321",referee);
+				User user = userService.apply(username,password,referee);
 				UserProfile profile = dao.fetch(UserProfile.class, user.getId());
 				profile.setEmail(email);
 				profile.setEmailChecked(true);
-				//申请用户的时候，临时将推荐人name存放到nickname中
-				profile.setNickname(referee);
+				profile.setNickname(username);
 				profile.setUser(user);
 				profile.setUserId(user.getId());
 				dao.update(profile);
 			}
 		});
-		return "申请已经发出，我们会尽快处理您的申请";
+		return ajaxOk("申请已经发出，我们会尽快处理您的申请,请留意您的邮箱");
 	}
 
 	protected static Pattern P_USERNAME = Pattern.compile("^[a-z][a-z0-9]{4,10}$");

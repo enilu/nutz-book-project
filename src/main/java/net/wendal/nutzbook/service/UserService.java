@@ -49,8 +49,7 @@ public class UserService extends IdNameEntityService<User> {
 		UserProfile profile = new UserProfile();
 		profile.setUserId(user.getId());
 		profile.setLoginname(user.getName());
-		//申请用户的时候，临时将推荐人name存放到nickname中
-		profile.setNickname(referee);
+		profile.setNickname(user.getName());
 		dao().insert(profile);
 		return user;
 	}

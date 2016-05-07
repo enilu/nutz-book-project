@@ -32,7 +32,7 @@ layout("_layout.btl",{}){
           发布于 ${obj.topic.createAt}
         </span>
         <span>
-          作者 <a data-pjax href="${ctxPath}/yvr/u/${obj.topic.author.loginname}">${obj.topic.author.nickname!, escape}</a>
+          作者 <a data-pjax href="${ctxPath}/yvr/u/show/${obj.topic.author.loginname}">${obj.topic.author.nickname!, escape}</a>
         </span>
         <span>
           ${obj.topic.visitCount} 次浏览

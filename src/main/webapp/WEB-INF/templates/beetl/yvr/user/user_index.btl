@@ -9,10 +9,10 @@
       </ul>
     </div>
     <div class='inner userinfo'>
-      <div class='user_big_avatar' id="user_index_avatar">
+      <div class='user_big_avatar' id="user_index_avatar" title="点击修改头像">
         <img src="${cdnbase}${ctxPath}/yvr/u/${obj.c_user.loginname}/avatar" class="user_avatar" title="点击修改头像"/>
       </div>
-      <a class='dark' id="user_index_nickname"> ${obj.c_user.nickname, escape}</a>
+      <a class='dark' id="user_index_nickname" title="点击修改昵称"> ${obj.c_user.nickname, escape}</a>
       <div class='user_profile'>
         <ul class='unstyled'>
           <span class='big'>${obj.c_user.score}</span> 积分
@@ -29,7 +29,7 @@
     		text_size:20,
 			g_over: "none",
 			bg_out: "none",
-    		field_type: "textarea",
+    		field_type: "text",
 			value_required: "true",
 			success: function(data){
 				$("#user_index_nickname").html(data);
