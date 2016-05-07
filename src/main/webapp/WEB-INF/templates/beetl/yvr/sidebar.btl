@@ -33,6 +33,8 @@
       <p>${conf['website.title']}</p>
 
       <div>
+      <a href='#' onclick="f_signup_apply();">帐号申请</a>
+      <!--
         <a href="${ctxPath}/yvr/u/oauth/github" data-intro="使用Github登陆是推荐方式" data-position="bottom">
           <span class="span-info">
             推荐GitHub一键登录
@@ -44,6 +46,7 @@
       		<img src="${cdnbase}${base}/rs/images/qq_connect.png"/>
       	</a>
       	<%}%>
+      	-->
       </div>
     </div>
     <% } %>

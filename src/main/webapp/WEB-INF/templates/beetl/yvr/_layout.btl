@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="referrer" content="always"/>
-  <meta property="qc:admins" content="345615513542636" />
+  <meta property="qc:admins" content="06150154776330774514560540" />
   <meta name="apple-itunes-app" content="app-id=1082195150"/>
   <meta property="og:type" content="bbs"/>
 <link rel="dns-prefetch" href="//hm.baidu.com"/>
@@ -134,6 +134,7 @@ var ctxPath = "${ctxPath}";
         <li><a href='${ctxPath}/yvr/u/logout' data-method="post" rel="nofollow">退出</a></li>
         <% } else { %>
         <li><a href='#' onclick="f_signin();">登录</a></li>
+        <li><a href='#' onclick="f_signup_apply();">帐号申请</a></li>
         <% } %>
       </ul>
       <a class="btn btn-navbar" id="responsive-sidebar-trigger">
@@ -169,6 +170,26 @@ var ctxPath = "${ctxPath}";
   </div>
 </div>
 <div id="sidebar-mask"></div>
+
+<div id="signup_apply_div" style="display: none">
+	<form id='signup_apply_form' style="padding: 30px 30px 30px 30px">
+	<div class="input-group">
+      		<span class="input-group-addon" id="basic-addon11">推荐人</span>
+      		<input name="tuijianren" type="text" class="form-control" placeholder="请一定要输入哦" aria-describedby="basic-addon11">
+    	</div>
+	<div class="input-group">
+  		<span class="input-group-addon" id="basic-addon12">我想要的用户名</span>
+  		<input name="username" type="text" class="form-control" placeholder="仅小写英文字母和数字,4到10位" aria-describedby="basic-addon12">
+	</div>
+
+	<div class="input-group">
+  		<span class="input-group-addon" id="basic-addon13">邮箱</span>
+  		<input name="email" type="email" class="form-control" placeholder="申请通过后通过此邮箱通知您" aria-describedby="basic-addon13">
+	</div>
+	<button type="button" onclick="do_signup_apply();" class="btn btn-primary">提交申请</button>
+
+	</form>
+</div>
 <div id="signup_div" style="display: none">
 	<form id='signup_form' style="padding: 30px 30px 30px 30px">
 	<div class="input-group">
@@ -184,7 +205,8 @@ var ctxPath = "${ctxPath}";
   		<input name="email" type="email" class="form-control" placeholder="用于发送验证邮件" aria-describedby="basic-addon1">
 	</div>
 	<button type="button" onclick="do_signup();" class="btn btn-primary">注册</button>
-	<a href="${ctxPath}/yvr/u/oauth/github">推荐通过github登陆</a>
+	<!--<a href="${ctxPath}/yvr/u/oauth/github">推荐通过github登陆</a>-->
+
 	</form>
 </div>
 
@@ -206,7 +228,9 @@ var ctxPath = "${ctxPath}";
 		<img id="captcha_img" onclick="next_captcha();return false;"/>
 	</div>
 	<button type="button" onclick="do_signin();" class="btn btn-primary">登陆</button>
-	<a href="${ctxPath}/yvr/u/oauth/github">推荐通过github登陆</a>
+
+		<!--<a href="${ctxPath}/yvr/u/oauth/github">推荐通过github登陆</a>-->
+
 	</form>
 </div>
 
@@ -222,13 +246,33 @@ function f_signup() {
     	layer.open({"title":"一步注册", shadeClose : true, "type":1, content : $("#signup_div"), area : ['300px', '370px']});
 	}, 300);
 };
+
+function f_signup_apply() {
+	setTimeout(function() {
+    	layer.open({"title":"帐号申请", shadeClose : true, "type":1, content : $("#signup_apply_div"), area : ['300px', '370px']});
+	}, 300);
+};
+
 function f_signin() {
 next_captcha();
 setTimeout(function() {
 		layer.open({"title":"登陆", shadeClose : true, "type":1, content : $("#signin_div"), area : ['300px', '370px']});
 	}, 300);
 };
+function do_signup_apply(){
+console.log($("#signup_apply_form").serialize());
+$.ajax({
+		url : "${ctxPath}/yvr/u/signupapply/"+$("#signup_apply_form").serialize(),
+		method : "GET",
+		//data : $("#signup_apply_form").serialize(),
+		//dataType : "json",
+		success : function(re) {
 
+			layer.alert(re);
+		}
+	});
+	return false;
+}
 function do_signup() {
 	$.ajax({
 		url : "${ctxPath}/yvr/u/signup",

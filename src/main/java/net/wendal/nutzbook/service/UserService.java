@@ -36,6 +36,24 @@ public class UserService extends IdNameEntityService<User> {
 		dao().insert(profile);
 		return user;
 	}
+	@SLog(tag = "申请用户", msg = "用户名[${args[0]}]")
+	public User apply(String name, String password,String referee) {
+		User user = new User();
+		user.setName(name.trim().toLowerCase());
+		user.setLocked(true);
+		user.setSalt(R.UU16());
+		user.setPassword(new Sha256Hash(password, user.getSalt()).toHex());
+		user.setCreateTime(new Date());
+		user.setUpdateTime(new Date());
+		user = dao().insert(user);
+		UserProfile profile = new UserProfile();
+		profile.setUserId(user.getId());
+		profile.setLoginname(user.getName());
+		//申请用户的时候，临时将推荐人name存放到nickname中
+		profile.setNickname(referee);
+		dao().insert(profile);
+		return user;
+	}
 
 	public int fetch(String username, String password) {
 		User user = fetch(username);

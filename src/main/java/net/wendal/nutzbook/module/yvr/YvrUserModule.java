@@ -203,6 +203,48 @@ public class YvrUserModule extends BaseModule {
 		return "注册成功,可以登陆了";
 	}
 
+	/**
+	 * 帐号申请
+	 * @param token
+	 * @return
+	 */
+	@GET
+	@At("/signupapply/?")
+	@Ok("raw")
+	public Object signupApply(String token) {
+
+		//tuijianren=admin&username=testapply&email=eniluzt@qq
+		String [] tokenArr = token.split("&");
+		String referee = tokenArr[0].split("=")[1];
+		String userName = tokenArr[1].split("=")[1];
+		String email = tokenArr[2].split("=")[1];
+
+		// 再次检查用户名
+		if (0 != dao.count(User.class, Cnd.where("name", "=", userName))) {
+			return "用户名已被占用";
+		}
+		if (0 != dao.count(UserProfile.class, Cnd.where("email", "=", email))) {
+			return "Email地址已被占用";
+		}
+		if(Strings.isBlank(referee)){
+			return "推荐人不能为空";
+		}
+		Trans.exec(new Atom() {
+			public void run() {
+				User user = userService.apply(userName,userName+"321",referee);
+				UserProfile profile = dao.fetch(UserProfile.class, user.getId());
+				profile.setEmail(email);
+				profile.setEmailChecked(true);
+				//申请用户的时候，临时将推荐人name存放到nickname中
+				profile.setNickname(referee);
+				profile.setUser(user);
+				profile.setUserId(user.getId());
+				dao.update(profile);
+			}
+		});
+		return "申请已经发出，我们会尽快处理您的申请";
+	}
+
 	protected static Pattern P_USERNAME = Pattern.compile("^[a-z][a-z0-9]{4,10}$");
 	
 	@POST
