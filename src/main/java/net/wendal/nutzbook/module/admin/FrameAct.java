@@ -54,4 +54,21 @@ public class FrameAct {
 	@Ok("fm:templates.admin.topic.frame.right")
 	public void topicRight() {
 	}
+
+	@At("/dic_main")
+	@Ok("fm:templates.admin.dic.frame.main")
+	public void dicMain() {
+	}
+
+	@At("/dic_left")
+	@Ok("fm:templates.admin.dic.frame.left")
+	public void dicLeft() {
+	}
+
+	@At("/dic_right")
+	@Ok("fm:templates.admin.dic.frame.right")
+	public void dicRight() {
+	}
+
+
 }

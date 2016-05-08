@@ -7,6 +7,7 @@ public enum TopicType {
 	share("分享"), 
 	shortit("短点"),
 	work("工作"),
+	house("居住"),
 	fav("兴趣"),
 	nb("灌水"), 
 	job("招聘"),

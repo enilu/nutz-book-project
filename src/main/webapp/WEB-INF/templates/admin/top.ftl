@@ -84,6 +84,7 @@ $(function(){
                                     	<li class="current" id="tb_11" onclick="HoverLi(1,1,${max});"><a href="index_main" target="mainFrame"><@s.m "global.admin.home"/></a></li>
 										<@perm_chow perm="user">	
 										<li class="sep"></li><li class="normal" id="tb_12" onclick="HoverLi(1,2,${max});"><a href="frame/user_main" target="mainFrame">账号管理</a></li>
+                                            <li class="sep"></li><li class="normal" id="tb_13" onclick="HoverLi(1,3,${max});"><a href="frame/dic_main" target="mainFrame">基础数据管理</a></li>
 										</@perm_chow>
 										<@perm_chow perm="topic">	
 										<li class="sep"></li><li class="normal" id="tb_13" onclick="HoverLi(1,3,${max});"><a href="frame/topic_main" target="mainFrame">Topic管理</a></li>
