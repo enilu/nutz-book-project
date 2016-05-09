@@ -40,6 +40,8 @@ public class UserProfile extends BasePojo implements Serializable {
 	protected String description;
 	@Column("loc")
 	protected String location;
+	@Column
+	protected  String school;
 	
 	@JsonField(ignore=true)
 	@One(target=User.class, field="userId")
@@ -100,6 +102,15 @@ public class UserProfile extends BasePojo implements Serializable {
 	public void setLocation(String location) {
 		this.location = location;
 	}
+
+	public String getSchool() {
+		return school;
+	}
+
+	public void setSchool(String school) {
+		this.school = school;
+	}
+
 	public User getUser() {
 		return user;
 	}

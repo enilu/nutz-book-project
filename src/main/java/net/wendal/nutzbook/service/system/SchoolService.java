@@ -1,6 +1,6 @@
-package net.wendal.nutzbook.service;
+package net.wendal.nutzbook.service.system;
 
-import net.wendal.nutzbook.bean.School;
+import net.wendal.nutzbook.bean.system.School;
 import net.wendal.nutzbook.page.Pagination;
 import org.nutz.dao.pager.Pager;
 import org.nutz.ioc.loader.annotation.IocBean;

@@ -14,6 +14,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import net.wendal.nutzbook.service.collector.ruanyifeng.RuanyifengCollector;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.pager.Pager;
@@ -370,4 +371,28 @@ public class YvrModule extends BaseModule {
 		log.debug("Image Dir = " + imageDir);
 		Files.createDirIfNoExists(new File(imageDir));
 	}
+	@GET
+	@At("/collect/?")
+	@Ok("raw")
+	public Object collection(String param) {
+		 String[] params = param.split("\\|");
+		String type = params[0];
+		String start = params[1];
+		String result = "nothin";
+		List<Topic> topics = null;
+		switch (type){
+			case "ruanyifeng":
+				String[] dates = start.split("-");
+				 topics = new RuanyifengCollector(dates[0],dates[1]).collect();
+				break;
+			default:
+				result="暂时不支持该数据源的采集";
+				break;
+		}
+		for(Topic topic:topics) {
+			yvrService.add(topic, topic.getUserId());
+		}
+		return  result;
+	}
+
 }

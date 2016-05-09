@@ -28,7 +28,7 @@ function getTableForm() {
 	<@p.column title="名称" align="center">${school.name}</@p.column><#t/>
 	<@shiro.hasPermission name="school:update">
 	<@p.column code="global.operate" align="center">
-		<a href="javascript:void(0)" onclick="Cms.deleted('${school.id}')" class="pn-opt"><@s.m "global.delete" /></a><#t/>
+		<a href="javascript:void(0)" onclick="delete_Cms.deleted('${school.id}')" class="pn-opt"><@s.m "global.delete" /></a><#t/>
 	</@p.column><#t/>
 	</@shiro.hasPermission>
 </@p.table>

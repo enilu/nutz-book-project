@@ -1,4 +1,4 @@
-package net.wendal.nutzbook.bean;
+package net.wendal.nutzbook.bean.system;
 
 import org.nutz.dao.entity.annotation.*;
 

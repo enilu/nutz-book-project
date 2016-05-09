@@ -13,6 +13,9 @@
         <img src="${cdnbase}${ctxPath}/yvr/u/${obj.c_user.loginname}/avatar" class="user_avatar" title="点击修改头像"/>
       </div>
       <a class='dark' id="user_index_nickname" title="点击修改昵称"> ${obj.c_user.nickname, escape}</a>
+      常住地：<a class='dark' id="user_index_location" title="点击修改常住地"> ${obj.c_user.location, escape}</a>
+      &nbsp;我的学校：<a class='dark' id="user_index_school" title="点击修改我的学校"> ${obj.c_user.school, escape}</a>
+
       <div class='user_profile'>
         <ul class='unstyled'>
           <span class='big'>${obj.c_user.score}</span> 积分
@@ -40,6 +43,40 @@
 				layer.alert("修改昵称失败了");
 			}
 		});
+       $("#user_index_location").editInPlace({
+            url: "${base}/yvr/u/profile/update/location",
+                    textarea_rows : 1,
+                    text_size:20,
+                    g_over: "none",
+                    bg_out: "none",
+                    field_type: "text",
+                    value_required: "true",
+                    success: function(data){
+                        $("#user_index_location").html(data);
+                    },
+                    error: function(e){
+                        if (console)
+                            console.log(e);
+                        layer.alert("修改常住地失败了");
+                    }
+        });
+        $("#user_index_school").editInPlace({
+            url: "${base}/yvr/u/profile/update/school",
+                    textarea_rows : 1,
+                    text_size:20,
+                    g_over: "none",
+                    bg_out: "none",
+                    field_type: "text",
+                    value_required: "true",
+                    success: function(data){
+                        $("#user_index_school").html(data);
+                    },
+                    error: function(e){
+                        if (console)
+                            console.log(e);
+                        layer.alert("修改我的学校地失败了");
+                    }
+        });
 		var uploader = WebUploader.create({
             swf: '${base}/libs/webuploader/Uploader.swf',
             server: '${base}/yvr/u/profile/update/avatar',
@@ -63,6 +100,7 @@
 	</script>
     <%}%>
   </div>
+
   
   <%if (null != obj.access_token!) {%>
   <div class='panel'>

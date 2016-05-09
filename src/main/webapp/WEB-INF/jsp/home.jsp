@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isErrorPage="true" trimDirectiveWhitespaces="true"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head lang="en">
@@ -27,78 +28,136 @@
     
     <!-- 弹出层layer -->
 	<script src="${base}/rs/layer/layer.min.js" type="text/javascript"></script>
-    <script>
-        // home页的配置信息
-        _md_page_home_ = {
-            profile: {
-                name: "${obj.nickname}",
-                email: "${obj.email}",
-                avatar : "${base}/user/profile/avatar"
-            },
-            closeQuick : true,
-            nav_user: [
-            /*{
-                label: '登陆系统',
-                icon: 'md-person',
-                type: 'action',
-                action: 'login'
-            },*/
-            {
-                label: '安全退出',
-                icon: 'md-person',
-                type: 'action',
-                action: 'logout'
-            },
-            {
-                label: '跨屏二维码',
-                icon: 'md-person',
-                type: 'action',
-                action: 'cs_qr'
-            }
-            ],
-            nav_main: [{
-                label: '用户信息',
-                icon: 'md-cast',
-                type: 'url',
-                url: '/user_profile.jsp'
-            }, {
-                label: '用户管理',
-                icon: 'md-cast-connected',
-                type: 'url',
-                url: '/users.jsp'
-            }, {
-                label: '权限管理',
-                icon: 'md-event',
-                type: 'url',
-                url: '/authority.jsp'
-            }, {
-                label: '帖子管理',
-                icon: 'md-event',
-                type: 'url',
-                url: '/topics.jsp'
-            }, {
-                label: 'Druid监控',
-                icon: 'md-insert-chart',
-                type: 'url',
-                url: '/druid_static.jsp'
-            }],
-            actions: {
-                'logout' : function() {
-                	window.location.href = home_base + "/user/logout";
+    <c:if test="${obj.loginname eq 'admin'}">
+        <script>
+            // home页的配置信息
+
+            _md_page_home_ = {
+                profile: {
+                    name: "${obj.nickname}",
+                    email: "${obj.email}",
+                    avatar : "${base}/user/profile/avatar"
                 },
-                'cs_qr' : function() {
-                	window.$mp.home.nav.close();
-                	setTimeout(function() {
-                		var tmp = "<img src='${base}/cs/qr?url=";
-                		tmp += encodeURIComponent(window.location.href) +"'>";
-                    	$.layer({title:"跨屏二维码有效期2分钟", type:1, time:100, page:{html:tmp}, area : ['256px', '291px']}); // 256+35 = 291
-					}, 300);
+                closeQuick : true,
+                nav_user: [
+                    /*{
+                     label: '登陆系统',
+                     icon: 'md-person',
+                     type: 'action',
+                     action: 'login'
+                     },*/
+                    {
+                        label: '安全退出',
+                        icon: 'md-person',
+                        type: 'action',
+                        action: 'logout'
+                    },
+                    {
+                        label: '跨屏二维码',
+                        icon: 'md-person',
+                        type: 'action',
+                        action: 'cs_qr'
+                    }
+                ],
+                nav_main: [{
+                    label: '用户信息',
+                    icon: 'md-cast',
+                    type: 'url',
+                    url: '/user_profile.jsp'
+                }, {
+                    label: '用户管理',
+                    icon: 'md-cast-connected',
+                    type: 'url',
+                    url: '/users.jsp'
+                }, {
+                    label: '权限管理',
+                    icon: 'md-event',
+                    type: 'url',
+                    url: '/authority.jsp'
+                }, {
+                    label: '帖子管理',
+                    icon: 'md-event',
+                    type: 'url',
+                    url: '/topics.jsp'
+                }, {
+                    label: 'Druid监控',
+                    icon: 'md-insert-chart',
+                    type: 'url',
+                    url: '/druid_static.jsp'
+                }],
+                actions: {
+                    'logout' : function() {
+                        window.location.href = home_base + "/user/logout";
+                    },
+                    'cs_qr' : function() {
+                        window.$mp.home.nav.close();
+                        setTimeout(function() {
+                            var tmp = "<img src='${base}/cs/qr?url=";
+                            tmp += encodeURIComponent(window.location.href) +"'>";
+                            $.layer({title:"跨屏二维码有效期2分钟", type:1, time:100, page:{html:tmp}, area : ['256px', '291px']}); // 256+35 = 291
+                        }, 300);
+                    }
                 }
-            }
-        };
-    </script>
+            };
+        </script>
+    </c:if>
+    <c:if test="${obj.loginname ne 'admin'}">
+        <script>
+            // home页的配置信息
+
+            _md_page_home_ = {
+                profile: {
+                    name: "${obj.nickname}",
+                    email: "${obj.email}",
+                    avatar : "${base}/user/profile/avatar"
+                },
+                closeQuick : true,
+                nav_user: [
+                    /*{
+                     label: '登陆系统',
+                     icon: 'md-person',
+                     type: 'action',
+                     action: 'login'
+                     },*/
+                    {
+                        label: '安全退出',
+                        icon: 'md-person',
+                        type: 'action',
+                        action: 'logout'
+                    },
+                    {
+                        label: '跨屏二维码',
+                        icon: 'md-person',
+                        type: 'action',
+                        action: 'cs_qr'
+                    }
+                ],
+                nav_main: [{
+                    label: '用户信息',
+                    icon: 'md-cast',
+                    type: 'url',
+                    url: '/user_profile.jsp'
+                }],
+                actions: {
+                    'logout' : function() {
+                        window.location.href = home_base + "/user/logout";
+                    },
+                    'cs_qr' : function() {
+                        window.$mp.home.nav.close();
+                        setTimeout(function() {
+                            var tmp = "<img src='${base}/cs/qr?url=";
+                            tmp += encodeURIComponent(window.location.href) +"'>";
+                            $.layer({title:"跨屏二维码有效期2分钟", type:1, time:100, page:{html:tmp}, area : ['256px', '291px']}); // 256+35 = 291
+                        }, 300);
+                    }
+                }
+            };
+        </script>
+    </c:if>
+
 </head>
 <body>
+
 <!--主菜单-->
 <div id="md-page-header">
     <!--左边菜单-->

@@ -61,7 +61,15 @@ public class YvrUserModule extends BaseModule {
 	
 	@Inject
 	protected UserService userService;
-	
+
+	@Ok("beetl:yvr/user/user_index.btl")
+	@RequiresUser
+	@At("/me")
+	public Object userProfile() {
+		return userHome(dao.fetch(User.class, Toolkit.uid()).getName());
+	}
+
+
 	@Ok("beetl:yvr/user/user_index.btl")
 	@RequiresUser
 	@At("/me")
@@ -88,6 +96,12 @@ public class YvrUserModule extends BaseModule {
 		if (Strings.isBlank(profile.getDescription()))
 			profile.setDescription(null);
 		int userId = Toolkit.uid();
+		if(profile.getSchool()==null){
+			profile.setSchool("点击输入学校");
+		}
+		if(profile.getLocation()==null){
+			profile.setLocation("点击输入常住地");
+		}
 		re.put("c_user", profile);
 		if (userId > 0) {
 			UserProfile me = fetch_userprofile(userId);
@@ -221,14 +235,6 @@ public class YvrUserModule extends BaseModule {
 							  @Param("username")String username,
 							  @Param("password")String password) {
 
-		//tuijianren=admin&username=testapply&email=eniluzt@qq
-//		String [] tokenArr = token.split("&");
-//		String referee = tokenArr[0].split("=")[1];
-//		String username = tokenArr[1].split("=")[1];
-//		String password = tokenArr[2].split("=")[1];
-//		String email = tokenArr[3].split("=")[1];
-
-
 		// 再次检查用户名
 		if (0 != dao.count(User.class, Cnd.where("name", "=", username))) {
 			return ajaxFail("用户名已被占用");
@@ -330,6 +336,14 @@ public class YvrUserModule extends BaseModule {
             profile.setNickname(update_value);
             dao.update(profile, "nickname");
             return profile.getNickname();
+			case "location":
+				profile.setLocation(update_value);
+				dao.update(profile,"loc");
+				return profile.getLocation();
+			case "school":
+				profile.setSchool(update_value);
+				dao.update(profile,"school");
+				return profile.getSchool();
         case "avatar":
             if (tmp == null)
                 return "{'ok':false}";
