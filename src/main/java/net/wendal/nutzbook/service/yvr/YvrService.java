@@ -165,7 +165,7 @@ public class YvrService implements RedisKey {
 		topic.setTop(false);
 		topic.setTags(new HashSet<String>());
 		if (topic.getType() == null)
-			topic.setType(TopicType.ask);
+			topic.setType(TopicType.duanzi);
 		topic.setContent(Toolkit.filteContent(topic.getContent()));
 		String oldContent = topic.getContent();
 		topic.setContentId(bigContentService.put(topic.getContent()));
@@ -178,12 +178,11 @@ public class YvrService implements RedisKey {
 		}
 		// 如果是ask类型,把帖子加入到 "未回复"列表
 		Pipeline pipe = jedis().pipelined();
-		if (TopicType.ask.equals(topic.getType())) {
+		if (TopicType.duanzi.equals(topic.getType())) {
 			pipe.zadd(RKEY_TOPIC_NOREPLY, System.currentTimeMillis(), topic.getId());
 		}
 		pipe.zadd(RKEY_TOPIC_UPDATE + topic.getType(), System.currentTimeMillis(), topic.getId());
-		if (topic.getType() != TopicType.shortit)
-			pipe.zadd(RKEY_TOPIC_UPDATE_ALL, System.currentTimeMillis(), topic.getId());
+
 		pipe.zincrby(RKEY_USER_SCORE, 100, ""+userId);
 		pipe.sync();
 		String replyAuthorName = dao.fetch(User.class, userId).getName();

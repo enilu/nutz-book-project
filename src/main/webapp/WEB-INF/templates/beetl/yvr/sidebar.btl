@@ -142,19 +142,10 @@
     </div>
     <div class='inner'>
       <ol class="friendship-community">
-        <li><a href='${ctxPath}/s/'>老版本短点入口</a></li>
-        <div class="sep10"></div>
         <li>
-        <a href="http://fir.im/nutzcn">客户端(Android)</a>
+        <a href="${cdnbase}${base}/rs/download/app-release.apk">客户端(Android)</a>
         </li>
         <div class="sep10"></div>
-        <li>
-        <a href="https://itunes.apple.com/us/app/nutz-she-qu/id1082195150?l=zh&ls=1&mt=8">客户端(ios)</a>
-        </li>
-        <div class="sep10"></div>
-        <li>
-        	<a href='${ctxPath}/apidocs/'>网站Open API</a>
-        </li>
       </ol>
     </div>
   </div>

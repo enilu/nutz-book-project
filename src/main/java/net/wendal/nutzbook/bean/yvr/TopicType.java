@@ -2,12 +2,12 @@ package net.wendal.nutzbook.bean.yvr;
 
 public enum TopicType {
 
-	ask("问答"), 
-	news("新闻"), 
-	share("分享"), 
-	shortit("短点"), 
+	duanzi("段子"),
+	news("新鲜事"),
+	pic("搞笑图"),
+//	shortit("短点"),
 	nb("灌水"), 
-	job("招聘"),
+//	job("招聘"),
 //	special("专题")
 	;
 	

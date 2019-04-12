@@ -78,7 +78,7 @@ public class SimpleTest extends TestBase {
 //	public void test_beetl_objectutl_for_enum () {
 //		MethodInvoker invoker = ObjectUtil.getInvokder(TopicType.class, "name");
 //		assertNotNull(invoker);
-//		TopicType.ask.name();
+//		TopicType.duanzi.name();
 //	}
 	
 //	@Test

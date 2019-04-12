@@ -67,7 +67,7 @@ public class TopicSearchService {
 	protected void _add(Topic topic) {
 		if (topic == null)
 			return; // 虽然不太可能,还是预防一下吧
-		if (topic.getType() != TopicType.ask && topic.getType() != TopicType.share)
+		if (topic.getType() != TopicType.duanzi && topic.getType() != TopicType.pic)
 		    return;
 		// 暂时不索引评论
 		dao.fetchLinks(topic, "replies");
@@ -145,7 +145,7 @@ public class TopicSearchService {
 
 	// @RequiresPermissions("topic:index:rebuild")
 	public void rebuild() throws IOException {
-		Sql sql = Sqls.queryString("select id from t_topic where tp='ask' or tp='share'");
+		Sql sql = Sqls.queryString("select id from t_topic where tp='duanzi' or tp='pic'");
 		dao.execute(sql);
 		luceneIndex.writer.deleteAll();
 		String[] topicIds = sql.getObject(String[].class);

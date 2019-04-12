@@ -19,7 +19,7 @@ function footer() {
 
   var $secondUlFooterLinks = $('<ul class="footer-links"></ul>');
   $secondUlFooterLinks
-  .append($('<li><a target="_blank" href="http://nutz.cn/yvr/list">返回论坛</a></li>'))
+  .append($('<li><a target="_blank" href="http://47.104.84.62:8080/yvr/list">返回论坛</a></li>'))
   .append($('<li><a target="_blank" href="http://nutzam.com">Nutz 官网地址</a></li>'));
 
   $unstyledUl

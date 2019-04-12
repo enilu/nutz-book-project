@@ -339,7 +339,7 @@ public class YvrModule extends BaseModule {
 		Pager pager = dao.createPager(1, 30);
 		pager.setRecordCount(list.size());
 		int userId = Toolkit.uid();
-		return _process_query_list(pager, list, userId, TopicType.ask, null, false, "/list/all");
+		return _process_query_list(pager, list, userId, TopicType.duanzi, null, false, "/list/all");
 	}
 
 	@RequiresPermissions("topic:index:rebuild")

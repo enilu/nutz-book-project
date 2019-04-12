@@ -151,12 +151,12 @@ public class YvrApiModule extends BaseModule {
 			}
 		} else {
 			if (type == null)
-				type = "ask";
+				type = "duanzi";
 			else if ("all".equals(type))
-				type = "ask";
+				type = "duanzi";
 			topics = redisDao.queryByZset(Topic.class, RKEY_TOPIC_UPDATE + type, pager);
 		}
-		if (page == 1 && "ask".equals(type)) {
+		if (page == 1 && "duanzi".equals(type)) {
 			for (Topic topic : yvrService.fetchTop()) {
 				list.add(_topic(topic, authors, mdrender, false));
 			}
@@ -318,7 +318,7 @@ public class YvrApiModule extends BaseModule {
 	 *
 	 * @apiParam {String} title		标题
 	 * @apiParam {String} content 	内容
-	 * @apiParam {String} [tab=ask] 类型,默认为问答
+	 * @apiParam {String} [tab=duanzi] 类型,默认为问答
 	 *
 	 * @apiSuccess {boolean} success 是否成功
 	 * @apiSuccess {String} [topic_id] 成功时返回帖子的Id

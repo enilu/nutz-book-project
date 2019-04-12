@@ -81,7 +81,7 @@ public class OauthModule extends BaseModule {
 	 * 统一的OAuth回调入口
 	 */
 	@At("/?/callback")
-	@Ok(">>:/yvr/list/ask")
+	@Ok(">>:/yvr/list/duanzi")
 	@Fail(">>:/yvr/list")
 	public Object callback(String _providerId, HttpSession session, HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		SocialAuthManager manager = (SocialAuthManager) session.getAttribute("openid_manager");
